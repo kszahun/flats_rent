@@ -17,14 +17,14 @@
                     <th>Cena</th>
                     <th>Liczba dostępnych łóżek</th>
                 </tr>
-            {% for flat in flats %}
-                <tr>
-                    <td>{{ flat.name }}</td>
-                    <td>{{ flat.address }}</td>
-                    <td>{{ flat.price }}</td>
-                    <td>{{ flat.maxNumberOfResidents }}</td>
-                </tr>
-            {% endfor %}
+                {% for flat in flats %}
+                    <tr>
+                        <td>{{ flat.name }}</td>
+                        <td>{{ flat.address }}</td>
+                        <td>{{ flat.price }}</td>
+                        <td>{{ flat.maxNumberOfResidents }}</td>
+                    </tr>
+                {% endfor %}
             </table>
         {% endif %}
     {% endblock %}

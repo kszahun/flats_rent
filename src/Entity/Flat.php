@@ -19,7 +19,7 @@ class Flat
     /**
      * @var int
      */
-    private $numberOfResidents;
+    private $maxNumberOfResidents;
 
     /**
      * @var Reservation[]

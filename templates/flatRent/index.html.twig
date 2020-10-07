@@ -6,8 +6,27 @@
 </head>
 <body>
     {% block body %}
-
-
+        <p>Mieszkania możliwe do wynajęcia:</p>
+        {% if flats|length == 0 %}
+            Brak mieszkań do wynajęcia!
+        {% else %}
+            <table>
+                <tr>
+                    <th>Nazwa</th>
+                    <th>Adres</th>
+                    <th>Cena</th>
+                    <th>Liczba dostępnych łóżek</th>
+                </tr>
+            {% for flat in flats %}
+                <tr>
+                    <td>{{ flat.name }}</td>
+                    <td>{{ flat.address }}</td>
+                    <td>{{ flat.price }}</td>
+                    <td>{{ flat.maxNumberOfResidents }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        {% endif %}
     {% endblock %}
 {% block javascripts %}{% endblock %}
 </body>

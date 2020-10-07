@@ -22,9 +22,9 @@ class Flat
     private $maxNumberOfResidents;
 
     /**
-     * @var Reservation[]
+     * @var ArrayCollection|Reservation[]
      */
-    private $Reservations;
+    private $reservations;
 
 
 }

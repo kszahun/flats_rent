@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Builder\FlatBuilder;
+use App\Form\ReservationForm;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -25,9 +26,11 @@ class FlatRentController extends AbstractController
      */
     public function flatList()
     {
+        $form = $this->createForm(ReservationForm::class);
         $flats = $this->flatBuilder->buildMultipleFlats(5);
         return $this->render('flatRent/index.html.twig', [
-            "flats" => $flats
+            "flats" => $flats,
+            "form" => $form->createView()
         ]);
     }
 }

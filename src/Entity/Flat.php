@@ -43,5 +43,45 @@ class Flat
      */
     private $reservations;
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->address;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMaxNumberOfResidents()
+    {
+        return $this->maxNumberOfResidents;
+    }
+
+    /**
+     * @return Reservation[]|ArrayCollection
+     */
+    public function getReservations()
+    {
+        return $this->reservations;
+    }
+
 
 }

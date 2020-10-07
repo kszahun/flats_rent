@@ -33,4 +33,38 @@ class Reservation
      * @var float
      */
     private $cost;
+
+    /**
+     * @return \DateTime
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfResidents()
+    {
+        return $this->numberOfResidents;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCost()
+    {
+        return $this->cost;
+    }
+
+
 }

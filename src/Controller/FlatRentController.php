@@ -80,13 +80,21 @@ class FlatRentController extends AbstractController
         ]);
     }
 
+    /**
+     * @param array $entities
+     * @param EntityManager $em
+     * @throws \Doctrine\ORM\ORMException
+     */
     private function persistEntities(array $entities, EntityManager $em) {
         foreach ($entities as $entity) {
             $em->persist($entity);
         }
-
     }
 
+    /**
+     * @param array $flats
+     * @return array
+     */
     private function changeArrayKeys(array $flats)
     {
         $newFlats =[];
@@ -97,6 +105,12 @@ class FlatRentController extends AbstractController
         return $newFlats;
     }
 
+    /**
+     * @param float $price
+     * @param int $numberOfResidents
+     * @param int $time
+     * @return float|int
+     */
     private function calculateCost(float $price, int $numberOfResidents, int $time)
     {
         return $price*$numberOfResidents*$time;

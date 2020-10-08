@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Builder\FlatBuilder;
+use App\Builder\ReservationBuilder;
 use App\Entity\Flat;
 use App\Form\ReservationForm;
 use App\Repository\FlatRepository;
@@ -25,11 +26,16 @@ class FlatRentController extends AbstractController
      * @var FlatRepository
      */
     private $flatRepository;
+    /**
+     * @var ReservationBuilder
+     */
+    private $reservationBuilder;
 
-    public function __construct(FlatBuilder $flatBuilder, FlatRepository $flatRepository)
+    public function __construct(FlatBuilder $flatBuilder, FlatRepository $flatRepository, ReservationBuilder $reservationBuilder)
     {
         $this->flatBuilder = $flatBuilder;
         $this->flatRepository = $flatRepository;
+        $this->reservationBuilder = $reservationBuilder;
     }
 
     /**

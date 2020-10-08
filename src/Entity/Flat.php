@@ -54,6 +54,7 @@ class Flat
     private $maxNumberOfResidents;
 
     /**
+     * @ORM\OneToMany(targetEntity="Reservation", mappedBy="flat", cascade={"all"})
      * @var ArrayCollection|Reservation[]
      */
     private $reservations;

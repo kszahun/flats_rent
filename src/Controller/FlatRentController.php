@@ -78,11 +78,12 @@ class FlatRentController extends AbstractController
             $numberOfResidents = $data['numberOfResidents'];
             $from = $data['start'];
             $to = $data['end'];
+            $validResponse = $this->reservationFormValidator->isValid($flat, $numberOfResidents, $from, $to);
 
-            if(!$this->reservationFormValidator->isValid($flat, $numberOfResidents, $from, $to)) {
+            if(!$validResponse['isValid']) {
                 $isReserved = false;
             } else {
-                $cost = $this->calculateCost($flat->getPrice(), $numberOfResidents, date_diff($from, $to)->days);
+                $cost = $this->calculateCost($flat->getPrice(), $numberOfResidents, date_diff($from, $to)->days+1);
                 $reservation = $this->reservationBuilder->buildReservation($flat, $numberOfResidents, $from, $to, $cost);
 
                 $em->persist($reservation);
@@ -92,6 +93,7 @@ class FlatRentController extends AbstractController
         }
 
         return $this->render('flatRent/index.html.twig', [
+            "errorMsg" =>isset($validResponse) ? ($validResponse['isValid'] ? "" : $validResponse['errorMsg']): "",
             "isReserved" => $isReserved,
             "flats" => $flats,
             "form" => $form->createView()

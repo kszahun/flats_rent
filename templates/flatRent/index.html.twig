@@ -31,8 +31,8 @@
 
         {% if isReserved %}
             Zarezerwowano!
-        {% elseif not isReserved  and isReserved != null%}
-            Podany termin jest już zarezerwowany! Wybierz inny.
+        {% elseif  isReserved == false %}
+            {{ errorMsg }}
         {% endif %}
 
     {% endblock %}

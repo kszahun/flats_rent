@@ -87,5 +87,62 @@ class Reservation
         return $this->cost;
     }
 
+    /**
+     * @param \DateTime $startDate
+     */
+    public function setStartDate(\DateTime $startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @param \DateTime $endDate
+     */
+    public function setEndDate(\DateTime $endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+    /**
+     * @param int $numberOfResidents
+     */
+    public function setNumberOfResidents(int $numberOfResidents)
+    {
+        $this->numberOfResidents = $numberOfResidents;
+    }
+
+    /**
+     * @param float $cost
+     */
+    public function setCost(float $cost)
+    {
+        $this->cost = $cost;
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return Flat
+     */
+    public function getFlat()
+    {
+        return $this->flat;
+    }
+
+    /**
+     * @param Flat $flat
+     */
+    public function setFlat(Flat $flat): void
+    {
+        $this->flat = $flat;
+    }
+
 
 }

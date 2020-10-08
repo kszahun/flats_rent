@@ -98,5 +98,43 @@ class Flat
         return $this->reservations;
     }
 
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
 
+    /**
+     * @param float $price
+     */
+    public function setPrice(float $price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @param string $address
+     */
+    public function setAddress(string $address)
+    {
+        $this->address = $address;
+    }
+
+    /**
+     * @param int $maxNumberOfResidents
+     */
+    public function setMaxNumberOfResidents(int $maxNumberOfResidents)
+    {
+        $this->maxNumberOfResidents = $maxNumberOfResidents;
+    }
+
+    /**
+     * @param Reservation $reservation
+     */
+    public function addReservation(Reservation $reservation)
+    {
+        $this->reservations->add($reservation);
+    }
 }

@@ -50,7 +50,7 @@ class Reservation
     private $numberOfResidents;
 
     /**
-     * @ORM\Column(type="decimal", precision=2)
+     * @ORM\Column(type="decimal", precision=10, scale=2)
      * @var float
      */
     private $cost;

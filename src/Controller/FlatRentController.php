@@ -9,6 +9,7 @@ use App\Builder\ReservationBuilder;
 use App\Entity\Flat;
 use App\Form\ReservationForm;
 use App\Repository\FlatRepository;
+use App\Service\ReservationFormValidator;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,20 +27,34 @@ class FlatRentController extends AbstractController
      * @var FlatRepository
      */
     private $flatRepository;
+
     /**
      * @var ReservationBuilder
      */
     private $reservationBuilder;
 
-    public function __construct(FlatBuilder $flatBuilder, FlatRepository $flatRepository, ReservationBuilder $reservationBuilder)
-    {
+    /**
+     * @var ReservationFormValidator
+     */
+    private $reservationFormValidator;
+
+    public function __construct(
+        FlatBuilder $flatBuilder,
+        FlatRepository $flatRepository,
+        ReservationBuilder $reservationBuilder,
+        ReservationFormValidator $validator
+    ){
         $this->flatBuilder = $flatBuilder;
         $this->flatRepository = $flatRepository;
         $this->reservationBuilder = $reservationBuilder;
+        $this->reservationFormValidator = $validator;
     }
 
     /**
      * @Route("/")
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\ORMException
      */
     public function flatList(Request $request)
     {
@@ -63,14 +78,17 @@ class FlatRentController extends AbstractController
             $numberOfResidents = $data['numberOfResidents'];
             $from = $data['start'];
             $to = $data['end'];
-            
-            $cost = $this->calculateCost($flat->getPrice(), $numberOfResidents, date_diff($from, $to)->days);
-            $reservation = $this->reservationBuilder->buildReservation($flat, $numberOfResidents, $from, $to, $cost);
 
-            $em->persist($reservation);
-            $em->flush();
-            $isReserved = true;
+            if(!$this->reservationFormValidator->isValid($flat, $numberOfResidents, $from, $to)) {
+                $isReserved = false;
+            } else {
+                $cost = $this->calculateCost($flat->getPrice(), $numberOfResidents, date_diff($from, $to)->days);
+                $reservation = $this->reservationBuilder->buildReservation($flat, $numberOfResidents, $from, $to, $cost);
 
+                $em->persist($reservation);
+                $em->flush();
+                $isReserved = true;
+            }
         }
 
         return $this->render('flatRent/index.html.twig', [

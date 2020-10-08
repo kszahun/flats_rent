@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Builder\FlatBuilder;
+use App\Entity\Flat;
 use App\Form\ReservationForm;
 use App\Repository\FlatRepository;
 use Doctrine\ORM\EntityManager;
@@ -36,7 +37,6 @@ class FlatRentController extends AbstractController
     public function flatList()
     {
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createForm(ReservationForm::class);
 
         if (count($this->flatRepository->findAll()) < 5) {
             $flats = $this->flatBuilder->buildMultipleFlats(5);
@@ -45,6 +45,8 @@ class FlatRentController extends AbstractController
         } else {
             $flats = $this->flatRepository->findAll();
         }
+        $flats = $this->changeArrayKeys($flats);
+        $form = $this->createForm(ReservationForm::class, null, ['data' =>['flats' => $flats]]);
 
         return $this->render('flatRent/index.html.twig', [
             "flats" => $flats,
@@ -57,5 +59,15 @@ class FlatRentController extends AbstractController
             $em->persist($entity);
         }
 
+    }
+
+    private function changeArrayKeys(array $flats)
+    {
+        $newFlats =[];
+        foreach ($flats as $flat) {
+            $newFlats[$flat->getName()] = $flat;
+        }
+
+        return $newFlats;
     }
 }

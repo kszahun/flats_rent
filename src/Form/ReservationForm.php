@@ -17,12 +17,7 @@ class ReservationForm extends AbstractType
     {
      $builder
          ->add('name', ChoiceType::class, [
-             'choices' => [
-                 "name1" => 1,
-                 "name2" => 2,
-                 "name3" => 3,
-                 "name4" => 4
-                 ]
+             'choices' => $options['data']['flats']
              ])
          ->add('start', DateType::class, [
              'widget' => 'choice',

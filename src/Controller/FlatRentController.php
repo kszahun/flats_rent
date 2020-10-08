@@ -10,6 +10,7 @@ use App\Form\ReservationForm;
 use App\Repository\FlatRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -34,7 +35,7 @@ class FlatRentController extends AbstractController
     /**
      * @Route("/")
      */
-    public function flatList()
+    public function flatList(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
@@ -47,6 +48,11 @@ class FlatRentController extends AbstractController
         }
         $flats = $this->changeArrayKeys($flats);
         $form = $this->createForm(ReservationForm::class, null, ['data' =>['flats' => $flats]]);
+
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            
+        }
 
         return $this->render('flatRent/index.html.twig', [
             "flats" => $flats,

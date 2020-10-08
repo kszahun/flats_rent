@@ -5,7 +5,10 @@ namespace App\Entity;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
-
+use Doctrine\ORM\Mapping as ORM;
+/**
+ * @ORM\Entity(repositoryClass=FlatRepository::class)
+ */
 class Flat
 {
 
@@ -19,21 +22,32 @@ class Flat
     }
 
     /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=255)
      * @var string
      */
     private $name;
 
     /**
+     * @ORM\Column(type="decimal", precision=2)
      * @var float
      */
     private $price;
 
     /**
+     * @ORM\Column(type="string", length=255)
      * @var string
      */
     private $address;
 
     /**
+     *  @ORM\Column(type="integer")
      * @var int
      */
     private $maxNumberOfResidents;

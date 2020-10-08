@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+
 /**
  * @ORM\Entity(repositoryClass=FlatRepository::class)
  */
@@ -47,7 +48,7 @@ class Flat
     private $address;
 
     /**
-     *  @ORM\Column(type="integer")
+     * @ORM\Column(type="integer")
      * @var int
      */
     private $maxNumberOfResidents;

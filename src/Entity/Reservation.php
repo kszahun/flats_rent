@@ -26,6 +26,12 @@ class Reservation
     private $id;
 
     /**
+     * @var Flat
+     * @ORM\ManyToOne(targetEntity="Flat", cascade={"all"})
+     */
+    private $flat;
+
+    /**
      * @ORM\Column(type="datetime")
      * @var \DateTime
      */

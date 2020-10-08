@@ -44,6 +44,7 @@ class FlatRentController extends AbstractController
     public function flatList(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $isReserved = null;
 
         if (count($this->flatRepository->findAll()) < 5) {
             $flats = $this->flatBuilder->buildMultipleFlats(5);
@@ -57,10 +58,23 @@ class FlatRentController extends AbstractController
 
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $flat = $data['name'];
+            $numberOfResidents = $data['numberOfResidents'];
+            $from = $data['start'];
+            $to = $data['end'];
             
+            $cost = $this->calculateCost($flat->getPrice(), $numberOfResidents, date_diff($from, $to)->days);
+            $reservation = $this->reservationBuilder->buildReservation($flat, $numberOfResidents, $from, $to, $cost);
+
+            $em->persist($reservation);
+            $em->flush();
+            $isReserved = true;
+
         }
 
         return $this->render('flatRent/index.html.twig', [
+            "isReserved" => $isReserved,
             "flats" => $flats,
             "form" => $form->createView()
         ]);
@@ -82,4 +96,10 @@ class FlatRentController extends AbstractController
 
         return $newFlats;
     }
+
+    private function calculateCost(float $price, int $numberOfResidents, int $time)
+    {
+        return $price*$numberOfResidents*$time;
+    }
+
 }

@@ -13,7 +13,6 @@ class ReservationBuilder
     {
         $reservation = new Reservation($start, $end, $numberOfResidents, $cost);
         $reservation->setFlat($flat);
-        $flat->addReservation($reservation);
 
         return $reservation;
     }

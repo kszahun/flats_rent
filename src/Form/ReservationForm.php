@@ -21,12 +21,19 @@ class ReservationForm extends AbstractType
              ])
          ->add('start', DateType::class, [
              'widget' => 'choice',
+             'years' => $this->getYears(),
          ])
           ->add('end', DateType::class, [
              'widget' => 'choice',
+              'years' => $this->getYears(),
          ])
          ->add('numberOfResidents', NumberType::class)
          ->add('submit', SubmitType::class);
     }
 
+    private function getYears()
+    {
+        $thisYear = new \DateTime('now');
+        return range($thisYear->format("Y"), $thisYear->format("Y")+4);
+    }
 }

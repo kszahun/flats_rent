@@ -59,7 +59,6 @@ class FlatRentController extends AbstractController
     public function flatList(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $isReserved = null;
 
         if (count($this->flatRepository->findAll()) < 5) {
             $flats = $this->flatBuilder->buildMultipleFlats(5);
@@ -80,21 +79,17 @@ class FlatRentController extends AbstractController
             $to = $data['end'];
             $validResponse = $this->reservationFormValidator->isValid($flat, $numberOfResidents, $from, $to);
 
-            if(!$validResponse['isValid']) {
-                $isReserved = false;
-            } else {
-                $cost = $this->calculateCost($flat->getPrice(), $numberOfResidents, date_diff($from, $to)->days+1);
+            if ($validResponse['isValid']) {
+                $cost = $this->calculateCost($flat->getPrice(), $numberOfResidents, date_diff($from, $to)->days + 1);
                 $reservation = $this->reservationBuilder->buildReservation($flat, $numberOfResidents, $from, $to, $cost);
-
+                $successReservationMessage = 'Zarezewowano Cena: '.$cost;
                 $em->persist($reservation);
                 $em->flush();
-                $isReserved = true;
             }
         }
 
         return $this->render('flatRent/index.html.twig', [
-            "errorMsg" =>isset($validResponse) ? ($validResponse['isValid'] ? "" : $validResponse['errorMsg']): "",
-            "isReserved" => $isReserved,
+            "message" =>isset($validResponse) ? ($validResponse['isValid'] ? $successReservationMessage : $validResponse['errorMsg']): "",
             "flats" => $flats,
             "form" => $form->createView()
         ]);

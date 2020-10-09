@@ -28,13 +28,7 @@
             </table>
         {% endif %}
         {{ form(form) }}
-
-        {% if isReserved %}
-            Zarezerwowano!
-        {% elseif  isReserved == false %}
-            {{ errorMsg }}
-        {% endif %}
-
+        {{ message }}
     {% endblock %}
 {% block javascripts %}{% endblock %}
 </body>

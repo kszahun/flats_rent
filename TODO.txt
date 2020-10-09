@@ -1,5 +1,4 @@
 TODO:
 1. add form validation(in form, befor submit)
 2.dodanie mechaniki rabatu
-3.wyświetlenie ceny
 4.możliwosć rezerwacji w jednoczesnym terminie jeśli liczba lóżek jest dostępna

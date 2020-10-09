@@ -22,12 +22,12 @@ class ReservationFormValidator
         if($from < $now || $to < $now) return ['isValid' => false, 'errorMsg' => "Podano datę z przeszłośći"];
         if($from > $to) return ['isValid' => false, 'errorMsg' => "Niezgody zakres dat(od>do)"];
         if($flat->getMaxNumberOfResidents() < $numberOfResidents) return ['isValid' => false, 'errorMsg' => "W tym mieszkaniu nie ma tylu miejsc"];
-        if($this->isDatesAlreadyReserved($flat, $from, $to)) return ['isValid' => false, 'errorMsg' => "Wybrany termin jest juz zarezerwowany"];
+        if($this->isDatesAlreadyReserved($flat, $from, $to, $numberOfResidents)) return ['isValid' => false, 'errorMsg' => "Wybrany termin jest juz zarezerwowany"];
 
         return ['isValid' => true];
     }
 
-    private function isDatesAlreadyReserved(Flat $flat, \DateTime $from, \DateTime $to)
+    private function isDatesAlreadyReserved(Flat $flat, \DateTime $from, \DateTime $to, int $numberOfResidents)
     {
         $flatReservations = $flat->getReservations();
         if($flatReservations->count() == 0) return false;
@@ -40,11 +40,12 @@ class ReservationFormValidator
             if(!$reservationStartDate > $to || !$reservationEndDate < $from) {
                 $daysOccupancy = $this->createOccupancyDaysArray($reservation, $from, $to, $daysOccupancy);
             }
+            $mostOccupiedDay = max($daysOccupancy);
 
-            if($reservationEndDate >= $from && $reservationStartDate < $from) return true;
-            if($reservationStartDate <= $to && $reservationEndDate > $to) return true;
-            if($reservationStartDate <= $from && $reservationEndDate >= $to) return true;
-            if($reservationStartDate <= $from && $reservationEndDate >= $to) return true;
+            if($reservationEndDate >= $from && $reservationStartDate < $from && !$this->isEnoughSpace($flat->getMaxNumberOfResidents(), $mostOccupiedDay, $numberOfResidents)) return true;
+            if($reservationStartDate <= $to && $reservationEndDate > $to && !$this->isEnoughSpace($flat->getMaxNumberOfResidents(), $mostOccupiedDay, $numberOfResidents)) return true;
+            if($reservationStartDate <= $from && $reservationEndDate >= $to && !$this->isEnoughSpace($flat->getMaxNumberOfResidents(), $mostOccupiedDay, $numberOfResidents)) return true;
+            if($reservationStartDate >= $from && $reservationEndDate <= $to  && !$this->isEnoughSpace($flat->getMaxNumberOfResidents(), $mostOccupiedDay, $numberOfResidents)) return true;
         }
 
         return false;
@@ -52,17 +53,25 @@ class ReservationFormValidator
 
     private function createOccupancyDaysArray(Reservation $reservation,\DateTime $from, \DateTime $to, array $daysOccupancy)
     {
-        $reservationStartDate = $reservation->getStartDate();
-        $reservationEndDate = $reservation->getEndDate();
+        $startDate = clone $reservation->getStartDate();
+        $endDate = $reservation->getEndDate();
         $numberOfResidents = $reservation->getNumberOfResidents();
-        while ($reservationStartDate <= $reservationEndDate) {
-           if($reservationStartDate >= $from && $reservationStartDate <= $to) {
-               $daysOccupancy[$reservationStartDate->format("Y-m-d")] = +$numberOfResidents;
+        while ($startDate <= $endDate) {
+           if($startDate >= $from && $startDate <= $to) {
+               if(isset($daysOccupancy[$startDate->format("Y-m-d")])) {
+                   $daysOccupancy[$startDate->format("Y-m-d")] += $numberOfResidents;
+               } else {
+                   $daysOccupancy[$startDate->format("Y-m-d")] = $numberOfResidents;
+               }
            }
-            $reservationStartDate->modify('+1 day');
+            $startDate->modify('+1 day');
         }
 
         return $daysOccupancy;
     }
 
+    private function isEnoughSpace(int $maxNumberOfResidents, int $mostOccupiedDay, int $numberOfResidentsFromReservation)
+    {
+        return $maxNumberOfResidents >= $mostOccupiedDay + $numberOfResidentsFromReservation;
+    }
 }

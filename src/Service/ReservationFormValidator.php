@@ -31,11 +31,15 @@ class ReservationFormValidator
     {
         $flatReservations = $flat->getReservations();
         if($flatReservations->count() == 0) return false;
-
+        $daysOccupancy = [];
         /** @var Reservation $reservation */
         foreach ($flatReservations as $reservation) {
             $reservationStartDate = $reservation->getStartDate();
             $reservationEndDate = $reservation->getEndDate();
+
+            if(!$reservationStartDate > $to || !$reservationEndDate < $from) {
+                $daysOccupancy = $this->createOccupancyDaysArray($reservation, $from, $to, $daysOccupancy);
+            }
 
             if($reservationEndDate >= $from && $reservationStartDate < $from) return true;
             if($reservationStartDate <= $to && $reservationEndDate > $to) return true;
@@ -44,6 +48,21 @@ class ReservationFormValidator
         }
 
         return false;
+    }
+
+    private function createOccupancyDaysArray(Reservation $reservation,\DateTime $from, \DateTime $to, array $daysOccupancy)
+    {
+        $reservationStartDate = $reservation->getStartDate();
+        $reservationEndDate = $reservation->getEndDate();
+        $numberOfResidents = $reservation->getNumberOfResidents();
+        while ($reservationStartDate <= $reservationEndDate) {
+           if($reservationStartDate >= $from && $reservationStartDate <= $to) {
+               $daysOccupancy[$reservationStartDate->format("Y-m-d")] = +$numberOfResidents;
+           }
+            $reservationStartDate->modify('+1 day');
+        }
+
+        return $daysOccupancy;
     }
 
 }

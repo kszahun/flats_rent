@@ -71,7 +71,7 @@ class FlatRentController extends AbstractController
         $form = $this->createForm(ReservationForm::class, null, ['data' =>['flats' => $flats]]);
 
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $flat = $data['name'];
             $numberOfResidents = $data['numberOfResidents'];
@@ -128,7 +128,13 @@ class FlatRentController extends AbstractController
      */
     private function calculateCost(float $price, int $numberOfResidents, int $time)
     {
-        return $price*$numberOfResidents*$time;
+        $cost = $price*$numberOfResidents*$time;
+        if ($time > 7) {
+            $discountPercent = ($time-7)*2;
+            if ($discountPercent > 40) $discountPercent=40;
+            $cost = $cost*($discountPercent/100);
+        }
+        return $cost;
     }
 
 }

@@ -19,6 +19,7 @@ class ReservationFormValidator
     public function isValid(Flat $flat, int $numberOfResidents, \DateTime $from, \DateTime $to)
     {
         $now = new \DateTime("now");
+        if($numberOfResidents <= 0) return ['isValid' => false, 'errorMsg' => "Podano błędną liczbe łóżek"];
         if($from < $now || $to < $now) return ['isValid' => false, 'errorMsg' => "Podano datę z przeszłośći"];
         if($from > $to) return ['isValid' => false, 'errorMsg' => "Niezgody zakres dat(od>do)"];
         if($flat->getMaxNumberOfResidents() < $numberOfResidents) return ['isValid' => false, 'errorMsg' => "W tym mieszkaniu nie ma tylu miejsc"];

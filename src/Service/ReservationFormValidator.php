@@ -40,6 +40,7 @@ class ReservationFormValidator
             if($reservationEndDate >= $from && $reservationStartDate < $from) return true;
             if($reservationStartDate <= $to && $reservationEndDate > $to) return true;
             if($reservationStartDate <= $from && $reservationEndDate >= $to) return true;
+            if($reservationStartDate <= $from && $reservationEndDate >= $to) return true;
         }
 
         return false;
